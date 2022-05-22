@@ -30,6 +30,10 @@ defmodule Bcs.Encoder do
     <<1::1, b5::7, 1::1, b4::7, 1::1, b3::7, 1::1, b2::7, 0::1, b1::7>>
   end
 
+  def uleb128(value) do
+    raise ArgumentError, "Value too big for ULEB128 #{inspect(value)}"
+  end
+
   @doc """
   Encode value to specific types.
   """
@@ -45,6 +49,22 @@ defmodule Bcs.Encoder do
 
     def encode(value, unquote(:"u#{bit}")) when value >= 0 and value < unquote(1<<<bit) do
       <<value::little-unsigned-unquote(bit)>>
+    end
+  end
+
+  def encode(value, :string) when is_binary(value) do
+    uleb128(byte_size(value)) <> value
+  end
+
+  def encode(value, {:list, size, type}) when is_list(value) and length(value) == size do
+    for inner_value <- value, into: <<>> do
+      encode(inner_value, type)
+    end
+  end
+
+  def encode(value, {:list, type}) when is_list(value) do
+    for inner_value <- value, into: uleb128(length(value)) do
+      encode(inner_value, type)
     end
   end
 

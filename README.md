@@ -11,8 +11,8 @@ Encoder for:
 - [x] Unsigned 8-bit, 16-bit, 32-bit, 64-bit, and 128-bit integers
 - [ ] Option
 - [ ] Unit (an empty value)
-- [ ] Fixed and variable length sequences
-- [ ] UTF-8 Encoded Strings
+- [x] Fixed and variable length sequences
+- [x] UTF-8 Encoded Strings
 - [ ] Tuples
 - [ ] Structures (aka “structs”)
 - [ ] Externally tagged enumerations (aka “enums”)
