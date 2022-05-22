@@ -60,7 +60,7 @@ defmodule Bcs.EncoderTest do
     end
   end
 
-  test "strings" do
+  test "Strings" do
     assert encode("", :string) == <<0x00>>
 
     assert encode("çå∞≠¢õß∂ƒ∫", :string) ==
@@ -68,9 +68,17 @@ defmodule Bcs.EncoderTest do
                0xB5, 0xC3, 0x9F, 0xE2, 0x88, 0x82, 0xC6, 0x92, 0xE2, 0x88, 0xAB>>
   end
 
-  test "lists" do
-    assert encode([1, 2, 3], {:list, 3, :u16}) == <<1, 0, 2, 0, 3, 0>>
+  test "Lists" do
+    assert encode([1, 2, 3], [:u16 | 3]) == <<1, 0, 2, 0, 3, 0>>
 
-    assert encode([1, 2], {:list, :u16}) == <<2, 1, 0, 2, 0>>
+    assert encode([1, 2], [:u16]) == <<2, 1, 0, 2, 0>>
+  end
+
+  test "Tuples" do
+    assert encode({-1, "diem"}, {:s8, :string}) == <<0xFF, 4, ?d, ?i, ?e, ?m>>
+  end
+
+  test "Maps" do
+    assert encode(%{?e => ?f, ?a => ?b, ?c => ?d}, %{:u8 => :u8}) == <<3, ?a, ?b, ?c, ?d, ?e, ?f>>
   end
 end

@@ -56,20 +56,43 @@ defmodule Bcs.Encoder do
     uleb128(byte_size(value)) <> value
   end
 
-  def encode(value, {:list, size, type}) when is_list(value) and length(value) == size do
+  def encode(value, [type | size]) when is_list(value) and length(value) == size do
     for inner_value <- value, into: <<>> do
       encode(inner_value, type)
     end
   end
 
-  def encode(value, {:list, type}) when is_list(value) do
-    for inner_value <- value, into: uleb128(length(value)) do
-      encode(inner_value, type)
+  def encode(values, [type]) when is_list(values) do
+    for value <- values, into: uleb128(length(values)) do
+      encode(value, type)
     end
+  end
+
+  def encode(values, types) when is_tuple(values) and is_tuple(types) and tuple_size(values) == tuple_size(types) do
+    encode_values(Tuple.to_list(values), Tuple.to_list(types))
+  end
+
+  def encode(value, type) when is_map(value) and is_map(type) and map_size(type) == 1 do
+    [{k_type, v_type}] = Map.to_list(type)
+
+    pairs =
+      for {k, v} <- value do
+        [encode(k, k_type), encode(v, v_type)]
+      end
+      |> Enum.sort()
+
+    [uleb128(map_size(value)) | pairs]
+    |> IO.iodata_to_binary()
   end
 
   def encode(value, type) do
     raise ArgumentError, "Can't encode #{inspect(value)} as #{inspect(type)}"
+  end
+
+  defp encode_values(values, types) do
+    for {value, type} <- Enum.zip(values, types), into: <<>> do
+      encode(value, type)
+    end
   end
 
 end

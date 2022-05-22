@@ -13,10 +13,10 @@ Encoder for:
 - [ ] Unit (an empty value)
 - [x] Fixed and variable length sequences
 - [x] UTF-8 Encoded Strings
-- [ ] Tuples
+- [x] Tuples
 - [ ] Structures (aka “structs”)
 - [ ] Externally tagged enumerations (aka “enums”)
-- [ ] Maps
+- [x] Maps
 
 
 ## Installation
