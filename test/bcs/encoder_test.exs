@@ -68,6 +68,12 @@ defmodule Bcs.EncoderTest do
                0xB5, 0xC3, 0x9F, 0xE2, 0x88, 0x82, 0xC6, 0x92, 0xE2, 0x88, 0xAB>>
   end
 
+  test "Option" do
+    assert encode(nil, [:u8 | nil]) == <<0x00>>
+
+    assert encode(8, [:u8 | nil]) == <<0x01, 0x08>>
+  end
+
   test "Lists" do
     assert encode([1, 2, 3], [:u16 | 3]) == <<1, 0, 2, 0, 3, 0>>
 

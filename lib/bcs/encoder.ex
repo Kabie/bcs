@@ -56,6 +56,14 @@ defmodule Bcs.Encoder do
     uleb128(byte_size(value)) <> value
   end
 
+  def encode(value, [type | nil]) do
+    if is_nil(value) do
+      <<0x00>>
+    else
+      <<0x01>> <> encode(value, type)
+    end
+  end
+
   def encode(value, [type | size]) when is_list(value) and length(value) == size do
     for inner_value <- value, into: <<>> do
       encode(inner_value, type)
@@ -83,6 +91,10 @@ defmodule Bcs.Encoder do
 
     [uleb128(map_size(value)) | pairs]
     |> IO.iodata_to_binary()
+  end
+
+  def encode(value, type) when is_struct(value, type) do
+    Bcs.Struct.encode(value)
   end
 
   def encode(value, type) do
