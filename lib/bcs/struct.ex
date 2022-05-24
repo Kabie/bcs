@@ -9,6 +9,7 @@ defimpl Bcs.Struct, for: Any do
       fields
       |> Enum.map(fn {name, type} ->
         type = Macro.escape(type)
+
         quote do
           var!(value)
           |> Map.get(unquote(name))
