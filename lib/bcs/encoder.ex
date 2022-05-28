@@ -65,20 +65,25 @@ defmodule Bcs.Encoder do
     end
   end
 
+  # special case for Vec<u8>
+  def encode(value, [:u8 | size]) when is_binary(value) and byte_size(value) == size do
+    value
+  end
+
+  def encode(value, [:u8]) when is_binary(value) do
+    uleb128(byte_size(value)) <> value
+  end
+
   def encode(value, [type | size]) when is_list(value) and length(value) == size do
     for inner_value <- value, into: <<>> do
       encode(inner_value, type)
     end
   end
 
-  def encode(values, [type]) when is_list(values) do
-    for value <- values, into: uleb128(length(values)) do
-      encode(value, type)
+  def encode(value, [type]) when is_list(value) do
+    for inner_value <- value, into: uleb128(length(value)) do
+      encode(inner_value, type)
     end
-  end
-
-  def encode({_, _} = value, type) when is_atom(type) do
-    type.encode(value)
   end
 
   def encode(values, types)
@@ -101,6 +106,14 @@ defmodule Bcs.Encoder do
 
   def encode(value, type) when is_struct(value, type) do
     Bcs.Struct.encode(value)
+  end
+
+  def encode(value, type) when is_atom(type) do
+    if {:module, type} == Code.ensure_loaded(type) && function_exported?(type, :encode, 1) do
+      type.encode(value)
+    else
+      raise ArgumentError, "Can't encode #{inspect(value)} as #{inspect(type)}"
+    end
   end
 
   def encode(value, type) do

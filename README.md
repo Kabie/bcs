@@ -1,21 +1,21 @@
 # Bcs
 
-Elixir encoder for [bcs format](https://github.com/diem/bcs).
+Pure Elixir encoder for [bcs format](https://github.com/diem/bcs).
 
-## WIP
+## Features
 
 Encoder for:
 
 - [x] Booleans
 - [x] Signed 8-bit, 16-bit, 32-bit, 64-bit, and 128-bit integers
 - [x] Unsigned 8-bit, 16-bit, 32-bit, 64-bit, and 128-bit integers
-- [ ] Option
+- [x] Option
 - [ ] Unit (an empty value)
 - [x] Fixed and variable length sequences
 - [x] UTF-8 Encoded Strings
 - [x] Tuples
-- [ ] Structures (aka “structs”)
-- [ ] Externally tagged enumerations (aka “enums”)
+- [x] Structures (aka “structs”)
+- [x] Externally tagged enumerations (aka “enums”)
 - [x] Maps
 
 

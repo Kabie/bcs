@@ -5,6 +5,8 @@ end
 
 defimpl Bcs.Struct, for: Any do
   defmacro __deriving__(module, _struct, fields) do
+    field_keys = Keyword.keys(fields)
+
     fields_encode_calls =
       fields
       |> Enum.map(fn {name, type} ->
@@ -18,6 +20,8 @@ defimpl Bcs.Struct, for: Any do
       end)
 
     quote do
+      @enforce_keys unquote(field_keys)
+
       defimpl Bcs.Struct, for: unquote(module) do
         def encode(var!(value)) do
           [unquote_splicing(fields_encode_calls)]
