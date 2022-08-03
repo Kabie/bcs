@@ -39,8 +39,8 @@ defmodule Bcs.Encoder do
   """
   def encode(value, type)
 
-  def encode(true, :boolean), do: <<0x01>>
-  def encode(false, :boolean), do: <<0x00>>
+  def encode(true, :bool), do: <<0x01>>
+  def encode(false, :bool), do: <<0x00>>
 
   for bit <- [8, 16, 32, 64, 128] do
     def encode(value, unquote(:"s#{bit}"))

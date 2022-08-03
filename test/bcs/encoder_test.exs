@@ -4,11 +4,11 @@ defmodule Bcs.EncoderTest do
   import Bcs.Encoder, only: [encode: 2, uleb128: 1]
 
   test "Booleans and Integers" do
-    assert encode(true, :boolean) == <<0x01>>
-    assert encode(false, :boolean) == <<0x00>>
+    assert encode(true, :bool) == <<0x01>>
+    assert encode(false, :bool) == <<0x00>>
 
     assert_raise ArgumentError, fn ->
-      encode(1, :boolean)
+      encode(1, :bool)
     end
 
     assert encode(-1, :s8) == <<0xFF>>
