@@ -1,5 +1,5 @@
 defmodule MyStruct do
-  @derive {Bcs.Struct, label: :string, chars: [:u8 | 4], boolean: :boolean}
+  @derive {Bcs.Struct, label: :string, chars: [:u8 | 4], boolean: :bool}
 
   defstruct [:boolean, :chars, :label, :unused]
 end
@@ -30,7 +30,7 @@ defmodule Bcs.StructTest do
     assert Bcs.Struct.encode(wrapper) ==
              Bcs.Encoder.encode(
                {"Wrpped Mystruct", "Hello", 'abcd', true, nil},
-               {:string, :string, [:u8 | 4], :boolean, [:s16 | nil]}
+               {:string, :string, [:u8 | 4], :bool, [:s16 | nil]}
              )
   end
 end
