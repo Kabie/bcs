@@ -1,4 +1,8 @@
 defprotocol Bcs.Struct do
+  @moduledoc """
+  Derive this protocol to define a BCS struct.
+  """
+
   @spec encode(value :: struct()) :: binary()
   def encode(value)
 end

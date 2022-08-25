@@ -1,5 +1,7 @@
 defmodule Bcs.TaggedEnum do
-  @moduledoc false
+  @moduledoc """
+  Use this module to define a tagged enum.
+  """
 
   defmacro __using__(variants) do
     variants

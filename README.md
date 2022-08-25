@@ -32,6 +32,58 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/bcs>.
+
+## Usage
+
+```elixir
+# Define the struct
+defmodule MyStruct do
+  @derive {Bcs.Struct,
+    label: :string,
+    chars: [:u8 | 4],  # <<= we use improper list for fixed length array
+    boolean: :bool,
+    maps: %{:u8 => :string},
+  }
+
+  defstruct [:label, :chars, :boolean, :maps, :field]
+end
+
+# Encode
+%MyStruct{
+  label: "hello",
+  chars: 'abcd',
+  boolean: true,
+  maps: %{1 => "1", 2 => "2"},
+  field: "this field will be ignored"
+} |> Bcs.encode()
+```
+
+## Define field Types
+
+ Rust Type   | Syntax
+-------------|-------------
+ `u8`, `s8`, `u16`, `u256`, ...   | `:u8`, `:s8`, `:u16`, `:u256`, ...
+ `bool`      |  `:bool`
+ `Option<T>` | `[t \| nil]`
+ `[T]`       | `[t]`
+ `[T; N]`    | `[t \| n]`
+ `String`    | `:string`
+ `(T1, T2)`  | `{t1, t2}`
+ `MyStruct`  | `MyStruct`
+ `enum E`    | `E`
+ `Map<K, V>` | `%{k => v}`
+
+### Define Tagged Enums
+
+```elixir
+defmodule Foo do
+  use Bcs.TaggedEnum, [
+    {:variant0, :u16},
+    {:variant1, :u8},
+    {:variant2, :string},
+    :variant3
+  ]
+end
+```
+
+Some valid values for type `Foo`: `{:variant0, 42}`, `{:variant2, "hello"}`, `:variant3`, etc.
