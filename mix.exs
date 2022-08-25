@@ -1,24 +1,41 @@
 defmodule Bcs.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+  @source_url "https://github.com/Kabie/bcs"
+
   def project do
     [
       app: :bcs,
-      version: "0.1.0",
+      version: @version,
+      description: description(),
       elixir: "~> 1.13",
       consolidate_protocols: Mix.env() != :test,
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      package: package(),
+      source_url: @source_url
     ]
   end
 
   def application do
-    [
-      extra_applications: []
-    ]
+    []
   end
 
   defp deps do
     []
+  end
+
+  defp description do
+    "Pure Elixir encoder for BCS format."
+  end
+
+  defp package do
+    %{
+      licenses: ["MIT"],
+      links: %{
+        "GitHub" => @source_url
+      }
+    }
   end
 end

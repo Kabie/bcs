@@ -1,6 +1,6 @@
 # Bcs
 
-Pure Elixir encoder for [bcs format](https://github.com/diem/bcs).
+Pure Elixir encoder for [BCS format](https://github.com/diem/bcs).
 
 ## Features
 
@@ -35,4 +35,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at <https://hexdocs.pm/bcs>.
-
