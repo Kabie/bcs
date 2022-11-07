@@ -66,22 +66,22 @@ defmodule Bcs.Encoder do
   end
 
   # special case for Vec<u8>
-  def encode(value, [:u8 | size]) when is_binary(value) and byte_size(value) == size do
-    value
-  end
-
   def encode(value, [:u8]) when is_binary(value) do
     uleb128(byte_size(value)) <> value
   end
 
-  def encode(value, [type | size]) when is_list(value) and length(value) == size do
-    for inner_value <- value, into: <<>> do
-      encode(inner_value, type)
-    end
+  def encode(value, [:u8 | size]) when is_binary(value) and byte_size(value) == size do
+    value
   end
 
   def encode(value, [type]) when is_list(value) do
     for inner_value <- value, into: uleb128(length(value)) do
+      encode(inner_value, type)
+    end
+  end
+
+  def encode(value, [type | size]) when is_list(value) and length(value) == size do
+    for inner_value <- value, into: <<>> do
       encode(inner_value, type)
     end
   end
