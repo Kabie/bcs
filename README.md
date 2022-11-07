@@ -1,10 +1,10 @@
 # Bcs
 
-Pure Elixir encoder for [BCS format](https://github.com/diem/bcs).
+Pure Elixir encoder/decoder for [BCS format](https://github.com/diem/bcs).
 
 ## Features
 
-Encoder for:
+Encoder/Decoder for:
 
 - [x] Booleans
 - [x] Signed 8-bit, 16-bit, 32-bit, 64-bit, and 128-bit integers
@@ -48,14 +48,19 @@ defmodule MyStruct do
   defstruct [:label, :chars, :boolean, :maps, :field]
 end
 
-# Encode
-%MyStruct{
+my_struct = %MyStruct{
   label: "hello",
   chars: 'abcd',
   boolean: true,
   maps: %{1 => "1", 2 => "2"},
   field: "this field will be ignored"
-} |> Bcs.encode()
+}
+
+# encode
+my_struct
+|> Bcs.encode()
+# then decode
+|> Bcs.decode(MyStruct)
 ```
 
 ## Define field Types
