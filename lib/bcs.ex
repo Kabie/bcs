@@ -14,4 +14,9 @@ defmodule Bcs do
   Encode an BCS value to type.
   """
   defdelegate encode(value, type), to: Bcs.Encoder
+
+  @doc """
+  Decode bytes as BCS type.
+  """
+  defdelegate decode(value, type), to: Bcs.Decoder
 end

@@ -64,6 +64,8 @@ defmodule Bcs.DecoderTest do
              :string
            ) ==
              {"çå∞≠¢õß∂ƒ∫", ""}
+
+    assert decode_value(<<3, ?a, ?b, ?c>>, [:u8]) == {'abc', ""}
   end
 
   test "Option" do

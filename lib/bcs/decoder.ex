@@ -72,24 +72,6 @@ defmodule Bcs.Decoder do
     decode_value(rest, type)
   end
 
-  # special case for Vec<u8>
-  def decode_value(bytes, [:u8]) do
-    with {len, rest} <- uleb128(bytes),
-      <<value::binary-size(len)>> <> rest <- rest
-    do
-      {value, rest}
-    else
-      _ -> :error
-    end
-  end
-
-  def decode_value(bytes, [:u8 | size]) when is_integer(size) do
-    case bytes do
-      <<value::binary-size(size)>> <> rest -> {value, rest}
-      _ -> :error
-    end
-  end
-
   def decode_value(bytes, [type]) do
     with {len, rest} <- uleb128(bytes) do
       decode_values(rest, List.duplicate(type, len))
@@ -115,6 +97,14 @@ defmodule Bcs.Decoder do
       {Map.new(values), rest}
     else
       _ -> :error
+    end
+  end
+
+  def decode_value(bytes, type) when is_atom(type) do
+    if {:module, type} == Code.ensure_loaded(type) && function_exported?(type, :decode, 1) do
+      type.decode(bytes)
+    else
+      :error
     end
   end
 

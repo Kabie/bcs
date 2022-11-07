@@ -9,7 +9,11 @@ end
 
 defimpl Bcs.Struct, for: Any do
   defmacro __deriving__(module, _struct, fields) do
-    field_keys = Keyword.keys(fields)
+    field_name = Keyword.keys(fields)
+
+    fields_types =
+      Keyword.values(fields)
+      |> Macro.escape()
 
     fields_encode_calls =
       fields
@@ -24,12 +28,20 @@ defimpl Bcs.Struct, for: Any do
       end)
 
     quote do
-      @enforce_keys unquote(field_keys)
+      @enforce_keys unquote(field_name)
 
       defimpl Bcs.Struct, for: unquote(module) do
         def encode(var!(value)) do
           [unquote_splicing(fields_encode_calls)]
           |> IO.iodata_to_binary()
+        end
+      end
+
+      def decode(bytes) do
+        with {values, rest} <- Bcs.Decoder.decode_values(bytes, unquote(fields_types)) do
+          {struct(unquote(module), Enum.zip(unquote(field_name), values)), rest}
+        else
+          _ -> :error
         end
       end
     end
