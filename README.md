@@ -58,9 +58,9 @@ my_struct = %MyStruct{
 
 # encode
 my_struct
-|> Bcs.encode()
+|> Bcs.encode!()
 # then decode
-|> Bcs.decode(MyStruct)
+|> Bcs.decode!(MyStruct)
 ```
 
 ## Define field Types
