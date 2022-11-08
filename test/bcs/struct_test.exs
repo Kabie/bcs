@@ -39,7 +39,7 @@ defmodule Bcs.StructTest do
   end
 
   test "Decode structs", %{wrapper: wrapper} do
-    encoded_then_decoded = wrapper |> Bcs.encode() |> Bcs.decode(Wrapper)
+    {:ok, encoded_then_decoded} = wrapper |> Bcs.encode!() |> Bcs.decode(Wrapper)
     assert put_in(wrapper.inner.unused, nil) == encoded_then_decoded
   end
 end

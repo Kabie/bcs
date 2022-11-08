@@ -31,15 +31,16 @@ defmodule Bcs.Decoder do
   @doc """
   Decode `bytes` as `type`
   """
-  @spec decode_value(bytes :: binary(), type :: term()) :: {term(), binary()} | :error
+  @spec decode(bytes :: binary(), type :: term()) :: {:ok, term()} | :error
   def decode(bytes, type) do
     with {value, ""} <- decode_value(bytes, type) do
-      value
+      {:ok, value}
     else
       _ -> :error
     end
   end
 
+  @spec decode_value(bytes :: binary(), type :: term()) :: {term(), binary()} | :error
   def decode_value(<<0x01>> <> rest, :bool), do: {true, rest}
   def decode_value(<<0x00>> <> rest, :bool), do: {false, rest}
 

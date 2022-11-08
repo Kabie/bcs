@@ -37,6 +37,7 @@ defmodule Bcs.Encoder do
   @doc """
   Encode value to specific types.
   """
+  @spec encode(value :: term(), type :: term()) :: binary()
   def encode(value, type)
 
   def encode(true, :bool), do: <<0x01>>

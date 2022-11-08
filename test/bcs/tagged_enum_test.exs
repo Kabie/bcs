@@ -18,9 +18,9 @@ defmodule Bcs.TaggedEnumTest do
   end
 
   test "Decode tagged enums" do
-    assert Bcs.Decoder.decode(<<0x00, 0x40, 0x1F>>, Foo) == {:variant0, 8000}
-    assert Bcs.Decoder.decode(<<0x01, 0xFF>>, Foo) == {:variant1, 255}
-    assert Bcs.Decoder.decode(<<0x02, 8, "variant2">>, Foo) == {:variant2, "variant2"}
-    assert Bcs.Decoder.decode(<<0x03>>, Foo) == :variant3
+    assert Bcs.Decoder.decode(<<0x00, 0x40, 0x1F>>, Foo) == {:ok, {:variant0, 8000}}
+    assert Bcs.Decoder.decode(<<0x01, 0xFF>>, Foo) == {:ok, {:variant1, 255}}
+    assert Bcs.Decoder.decode(<<0x02, 8, "variant2">>, Foo) == {:ok, {:variant2, "variant2"}}
+    assert Bcs.Decoder.decode(<<0x03>>, Foo) == {:ok, :variant3}
   end
 end
