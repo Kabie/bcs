@@ -3,6 +3,10 @@ defmodule Bcs.DecoderTest do
 
   import Bcs.Decoder, only: [decode_value: 2, uleb128: 1]
 
+  test "Unit" do
+    assert decode_value(<<>>, nil) == {nil, ""}
+  end
+
   test "Booleans" do
     assert decode_value(<<0x01>>, :bool) == {true, ""}
     assert decode_value(<<0x00, "rest">>, :bool) == {false, "rest"}
@@ -64,8 +68,14 @@ defmodule Bcs.DecoderTest do
              :string
            ) ==
              {"çå∞≠¢õß∂ƒ∫", ""}
+  end
 
+  test "Vec<u8>" do
     assert decode_value(<<3, ?a, ?b, ?c>>, [:u8]) == {'abc', ""}
+    assert decode_value(<<?a, ?b, ?c>>, [:u8 | 3]) == {'abc', ""}
+
+    assert decode_value(<<3, ?a, ?b, ?c>>, [:byte]) == {"abc", ""}
+    assert decode_value(<<?a, ?b, ?c>>, [:byte | 3]) == {"abc", ""}
   end
 
   test "Option" do

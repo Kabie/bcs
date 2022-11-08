@@ -43,6 +43,7 @@ defmodule Bcs.Decoder do
   def decode_value(<<0x01>> <> rest, :bool), do: {true, rest}
   def decode_value(<<0x00>> <> rest, :bool), do: {false, rest}
 
+  def decode_value(rest, nil), do: {nil, rest}
 
   for bit <- [8, 16, 32, 64, 128] do
     def decode_value(<<value::little-signed-unquote(bit)>> <> rest, unquote(:"s#{bit}")) do
@@ -70,6 +71,20 @@ defmodule Bcs.Decoder do
 
   def decode_value(<<0x01>> <> rest, [type | nil]) do
     decode_value(rest, type)
+  end
+
+  # Same as [:u8], but as binary instead of charlist
+  def decode_value(bytes, [:byte]) do
+    decode_value(bytes, :string)
+  end
+
+  # Same as [:u8 | size], but as binary instead of charlist
+  def decode_value(bytes, [:byte | size]) do
+    with <<value::binary-size(size)>> <> rest <- bytes do
+      {value, rest}
+    else
+      _ -> :error
+    end
   end
 
   def decode_value(bytes, [type]) do

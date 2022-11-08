@@ -42,6 +42,8 @@ defmodule Bcs.Encoder do
   def encode(true, :bool), do: <<0x01>>
   def encode(false, :bool), do: <<0x00>>
 
+  def encode(_, nil), do: <<>>
+
   for bit <- [8, 16, 32, 64, 128] do
     def encode(value, unquote(:"s#{bit}"))
         when value >= unquote(-(1 <<< (bit - 1))) and value < unquote(1 <<< (bit - 1)) do
@@ -65,12 +67,12 @@ defmodule Bcs.Encoder do
     end
   end
 
-  # special case for Vec<u8>
-  def encode(value, [:u8]) when is_binary(value) do
+  # special type for treating Vec<u8> as binary instead of charlist
+  def encode(value, [:byte]) when is_binary(value) do
     uleb128(byte_size(value)) <> value
   end
 
-  def encode(value, [:u8 | size]) when is_binary(value) and byte_size(value) == size do
+  def encode(value, [:byte | size]) when is_binary(value) and byte_size(value) == size do
     value
   end
 

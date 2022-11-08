@@ -10,7 +10,7 @@ Encoder/Decoder for:
 - [x] Signed 8-bit, 16-bit, 32-bit, 64-bit, and 128-bit integers
 - [x] Unsigned 8-bit, 16-bit, 32-bit, 64-bit, and 128-bit integers
 - [x] Option
-- [ ] Unit (an empty value)
+- [x] Unit (an empty value)
 - [x] Fixed and variable length sequences
 - [x] UTF-8 Encoded Strings
 - [x] Tuples
@@ -68,7 +68,8 @@ my_struct
  Rust Type   | Syntax
 -------------|-------------
  `u8`, `s8`, `u16`, `u256`, ...   | `:u8`, `:s8`, `:u16`, `:u256`, ...
- `bool`      |  `:bool`
+ `bool`      | `:bool`
+ `()`        | `nil`
  `Option<T>` | `[t \| nil]`
  `[T]`       | `[t]`
  `[T; N]`    | `[t \| n]`
@@ -77,6 +78,11 @@ my_struct
  `MyStruct`  | `MyStruct`
  `enum E`    | `E`
  `Map<K, V>` | `%{k => v}`
+
+Also we have a special type for treating `[u8]` as binary instead of charlist
+
+ `[u8]`      | `[:byte]`
+ `[u8; N]`   | `[:byte \| n]`
 
 ### Define Tagged Enums
 

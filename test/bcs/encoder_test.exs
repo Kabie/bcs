@@ -3,6 +3,10 @@ defmodule Bcs.EncoderTest do
 
   import Bcs.Encoder, only: [encode: 2, uleb128: 1]
 
+  test "Unit" do
+    assert encode(:anything, nil) == <<>>
+  end
+
   test "Booleans and Integers" do
     assert encode(true, :bool) == <<0x01>>
     assert encode(false, :bool) == <<0x00>>
@@ -66,8 +70,14 @@ defmodule Bcs.EncoderTest do
     assert encode("çå∞≠¢õß∂ƒ∫", :string) ==
              <<24, 0xC3, 0xA7, 0xC3, 0xA5, 0xE2, 0x88, 0x9E, 0xE2, 0x89, 0xA0, 0xC2, 0xA2, 0xC3,
                0xB5, 0xC3, 0x9F, 0xE2, 0x88, 0x82, 0xC6, 0x92, 0xE2, 0x88, 0xAB>>
+  end
 
+  test "Vec<u8>" do
     assert encode('abc', [:u8]) == <<3, ?a, ?b, ?c>>
+    assert encode('abc', [:u8 | 3]) == <<?a, ?b, ?c>>
+
+    assert encode("abc", [:byte]) == <<3, ?a, ?b, ?c>>
+    assert encode("abc", [:byte | 3]) == <<?a, ?b, ?c>>
   end
 
   test "Option" do
